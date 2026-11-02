@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Media Download — convert MP4, MP3, WAV and WEBM</title>
+<meta name="description" content="Convert and download media in MP4, MP3, WAV and WEBM. Batch convert, ZIP everything, or fetch from a direct URL.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0e0e10;--panel:#17171b;--line:#2a2a31;--tx:#f2efe9;--mu:#9a98a3;--a:#ff6b4a;--b:#8b5cf6;--ok:#3ddc97;--er:#ff5d6c;--g:linear-gradient(120deg,var(--a),var(--b))}
+*{box-sizing:border-box;margin:0}html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{background:var(--bg);color:var(--tx);font:16px/1.6 "Bricolage Grotesque",system-ui,sans-serif;padding-bottom:env(safe-area-inset-bottom)}
+body:before{content:"";position:fixed;inset:0;background:radial-gradient(60% 40% at 15% 0,#ff6b4a18,transparent),radial-gradient(50% 40% at 90% 10%,#8b5cf61f,transparent);pointer-events:none;z-index:-1}
+a{color:inherit}:focus-visible{outline:2px solid var(--a);outline-offset:3px}
+.wrap{max-width:1080px;margin:auto;padding:0 20px}
+nav{position:sticky;top:0;z-index:20;backdrop-filter:blur(14px);background:#0e0e10cc;border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+.logo{font-weight:800;letter-spacing:.02em;text-decoration:none}.logo b{background:var(--g);-webkit-background-clip:text;background-clip:text;color:transparent}
+nav ul{display:flex;gap:22px;list-style:none}nav ul a{text-decoration:none;color:var(--mu);font-size:15px}nav ul a:hover{color:var(--tx)}
+.btn{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:12px;padding:12px 20px;font:600 15px inherit;font-family:inherit;color:#fff;background:var(--g);cursor:pointer;text-decoration:none;transition:transform .15s,filter .15s}
+.btn:hover{transform:translateY(-1px);filter:brightness(1.1)}.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--tx)}
+.hero{padding:76px 0 36px}.hero h1{font-size:clamp(40px,7vw,78px);line-height:1;font-weight:800;letter-spacing:-.03em;max-width:12ch}
+.hero h1 em{font:italic 400 1em "Instrument Serif",serif;color:var(--a)}
+.hero p{color:var(--mu);max-width:52ch;margin-top:18px;font-size:18px;animation:rise .8s .15s both}.hero h1{animation:rise .8s both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:24px}
+.tabs{display:flex;gap:6px;margin-bottom:18px}.tabs button{background:none;border:1px solid transparent;color:var(--mu);padding:8px 16px;border-radius:10px;font:600 14px inherit;font-family:inherit;cursor:pointer}
+.tabs button[aria-selected=true]{background:#ffffff0f;border-color:var(--line);color:var(--tx)}
+.drop{border:2px dashed #3a3a44;border-radius:16px;padding:44px 20px;text-align:center;cursor:pointer;transition:.2s}
+.drop:hover,.drop.over{border-color:var(--a);background:#ff6b4a0d}.drop strong{font-size:20px}.drop p{color:var(--mu);font-size:14px;margin-top:6px}
+textarea{width:100%;min-height:120px;background:#0e0e10;border:1px solid var(--line);border-radius:12px;color:var(--tx);padding:14px;font:15px/1.5 ui-monospace,monospace;resize:vertical}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-top:18px}
+.fmts{display:flex;gap:8px;flex-wrap:wrap}.fmts label{cursor:pointer}.fmts input{position:absolute;opacity:0}
+.fmts span{display:block;padding:9px 18px;border:1px solid var(--line);border-radius:999px;font-weight:600;font-size:14px;transition:.15s}
+.fmts input:checked+span{background:var(--g);border-color:transparent}.fmts input:focus-visible+span{outline:2px solid var(--a);outline-offset:2px}
+.list{margin-top:18px;display:grid;gap:10px}
+.item{display:grid;grid-template-columns:1fr auto;gap:6px 14px;align-items:center;padding:14px;border:1px solid var(--line);border-radius:14px;background:#0e0e1080}
+.item .n{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}.item small{color:var(--mu)}
+.bar{grid-column:1/-1;height:6px;border-radius:9px;background:#26262d;overflow:hidden}.bar i{display:block;height:100%;width:0;background:var(--g);transition:width .4s}
+.item.error .bar i{background:var(--er)}.item.done .bar i{background:var(--ok)}
+.x{background:none;border:0;color:var(--mu);cursor:pointer;font-size:20px;line-height:1}.x:hover{color:var(--er)}
+.yt{margin-top:16px}.yt iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:14px;margin-top:14px}.yt p{color:var(--mu);font-size:14px;margin-top:8px}
+section{padding:72px 0}h2{font-size:clamp(28px,4vw,42px);letter-spacing:-.02em;margin-bottom:26px}
+.feat{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}.feat .card h3{font-size:18px;margin-bottom:6px}.feat .card p{color:var(--mu);font-size:15px}
+.dev{display:grid;grid-template-columns:minmax(260px,420px) 1fr;gap:44px;align-items:center}
+.pf{position:relative;aspect-ratio:4/5;border-radius:28px;overflow:hidden;background:var(--panel);border:1px solid var(--line);box-shadow:0 30px 80px #0009,0 0 0 8px #ffffff06}
+.pf:after{content:"";position:absolute;inset:0;border-radius:28px;box-shadow:inset 0 0 0 1px #ffffff14;pointer-events:none}
+.pf img,.sm img{width:100%;height:100%;object-fit:cover;display:block}
+.need{position:absolute;inset:0;display:none;place-items:center;text-align:center;padding:24px;color:var(--mu);font-size:14px}.empty .need{display:grid}
+.dev h2{margin-bottom:6px}.dev h3{font:italic 400 clamp(36px,5vw,56px)/1.05 "Instrument Serif",serif;background:var(--g);-webkit-background-clip:text;background-clip:text;color:transparent;width:fit-content}
+.meta{display:grid;gap:10px;margin:22px 0;max-width:380px}.meta div{display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:8px}.meta span{color:var(--mu)}
+.gal{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:26px;max-width:380px}.sm{position:relative;aspect-ratio:1;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:var(--panel)}.sm.empty{display:none}
+footer{border-top:1px solid var(--line);padding:32px 0 calc(32px + env(safe-area-inset-bottom));color:var(--mu);font-size:14px}footer .wrap{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between}
+#toasts{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));display:grid;gap:10px;z-index:50;max-width:calc(100vw - 32px)}
+.toast{padding:14px 18px;border-radius:12px;background:#1e1e24;border:1px solid var(--line);border-left:4px solid var(--ok);box-shadow:0 10px 30px #0008;animation:rise .3s}.toast.err{border-left-color:var(--er)}
+@media(max-width:760px){nav ul{display:none}.dev{grid-template-columns:1fr;gap:28px}.hero{padding-top:44px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body>
+<nav><div class="wrap"><a class="logo" href="#top">MEDIA <b>DOWNLOAD</b></a>
+<ul><li><a href="#convert">Convert</a></li><li><a href="#youtube">YouTube</a></li><li><a href="#features">Features</a></li><li><a href="#developer">Developer</a></li></ul>
+<a class="btn ghost" href="#convert">Start converting</a></div></nav>
+
+<header class="hero wrap" id="top"><h1>Any media, <em>any format</em>, in seconds.</h1>
+<p>Convert MP4, MP3, WAV and WEBM. Drop in a batch, or paste direct links, then grab everything as one ZIP.</p></header>
+
+<main class="wrap" id="convert"><div class="card">
+<div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-t="up">Upload files</button><button role="tab" aria-selected="false" data-t="url">Direct URLs</button></div>
+<div id="pUp"><div class="drop" id="drop" tabindex="0" role="button" aria-label="Choose files to upload">
+<strong>Drag and drop files here</strong><p id="limits">or click to browse</p></div>
+<input type="file" id="file" multiple hidden></div>
+<div id="pUrl" hidden><textarea id="urls" placeholder="https://example.com/clip.mp4&#10;https://example.com/song.wav" aria-label="Direct media URLs, one per line"></textarea>
+<p style="color:var(--mu);font-size:14px;margin-top:8px">One public link per line. Private network addresses are blocked.</p></div>
+<div class="list" id="list" aria-live="polite"></div>
+<div class="row"><div class="fmts" role="radiogroup" aria-label="Output format">
+<label><input type="radio" name="f" value="mp4" checked><span>MP4</span></label><label><input type="radio" name="f" value="mp3"><span>MP3</span></label>
+<label><input type="radio" name="f" value="wav"><span>WAV</span></label><label><input type="radio" name="f" value="webm"><span>WEBM</span></label></div>
+<div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn ghost" id="clear">Clear</button><button class="btn ghost" id="zip" hidden>Download ZIP</button><button class="btn" id="go">Convert</button></div></div>
+</div></main>
+
+<section id="youtube"><div class="wrap"><h2>YouTube, the official way</h2><div class="card yt">
+<p style="color:var(--tx);font-size:16px;margin:0">Paste a YouTube link to watch it here using YouTube’s official player. Media Download does not extract or convert YouTube streams. To save a video for offline viewing, use the Download button in the YouTube app (YouTube Premium).</p>
+<div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap"><input id="ytu" placeholder="https://www.youtube.com/watch?v=…" aria-label="YouTube link" style="flex:1;min-width:220px;background:#0e0e10;border:1px solid var(--line);border-radius:12px;color:var(--tx);padding:12px 14px;font:inherit">
+<button class="btn" id="ytb">Open player</button></div><div id="ytout"></div></div></div></section>
+
+<section id="features"><div class="wrap"><h2>Built for real workloads</h2><div class="feat">
+<div class="card"><h3>Batch conversion</h3><p>Queue several files at once and watch each one progress on its own.</p></div>
+<div class="card"><h3>One-click ZIP</h3><p>Finished files bundle into a single archive.</p></div>
+<div class="card"><h3>Direct URLs</h3><p>Fetch public media links with SSRF protection and size limits.</p></div>
+<div class="card"><h3>Private by default</h3><p>Files are deleted automatically after <span id="ttl">30</span> minutes.</p></div></div></div></section>
+
+<section id="developer"><div class="wrap dev">
+<div class="pf" id="pf"><img src="developer/portrait.jpg" alt="Pankaj Kumar, founder and developer of Media Download" onerror="this.parentNode.classList.add('empty');this.remove()"><div class="need">Portrait not added yet.<br>Save it as app/static/developer/portrait.jpg</div></div>
+<div><h2>Meet the developer</h2><h3>Pankaj Kumar</h3>
+<div class="meta"><div><span>Developer</span>Pankaj Kumar</div><div><span>Role</span>Founder &amp; Developer</div><div><span>Project</span>Media Download</div></div>
+<p style="color:var(--mu);max-width:46ch">I built Media Download to make converting files fast, private and free of clutter.</p>
+<a class="btn" style="margin-top:20px" href="https://www.instagram.com/__yours__pankaj?vrfl=MXNpMm1kd2Jjc2Fseg==" target="_blank" rel="noopener noreferrer">Follow on Instagram</a>
+<div class="gal"><div class="sm"><img src="developer/gallery1.jpg" alt="Pankaj Kumar" onerror="this.parentNode.classList.add('empty')"></div><div class="sm"><img src="developer/gallery2.jpg" alt="Pankaj Kumar" onerror="this.parentNode.classList.add('empty')"></div></div>
+</div></div></section>
+
+<footer><div class="wrap"><span>© <span id="yr"></span> Media Download · Built by Pankaj Kumar, Founder &amp; Developer</span>
+<a href="https://www.instagram.com/__yours__pankaj?vrfl=MXNpMm1kd2Jjc2Fseg==" target="_blank" rel="noopener noreferrer">Instagram</a></div></footer>
+<div id="toasts" role="status"></div>
+
+<script>
+const $=s=>document.querySelector(s);let files=[],tab="up",job=null,busy=false;
+$("#yr").textContent=new Date().getFullYear();
+const toast=(m,e)=>{const t=document.createElement("div");t.className="toast"+(e?" err":"");t.textContent=m;$("#toasts").append(t);setTimeout(()=>t.remove(),5000)};
+const mb=b=>(b/1048576).toFixed(1)+" MB";let cfg={max_mb:200,max_files:10,in:[]};
+fetch("/api/config").then(r=>r.json()).then(c=>{cfg=c;$("#limits").textContent=`or click to browse · up to ${c.max_files} files, ${c.max_mb} MB each`;$("#ttl").textContent=c.ttl_min;$("#file").accept=c.in.map(e=>"."+e).join(",")}).catch(()=>{});
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{tab=b.dataset.t;document.querySelectorAll(".tabs button").forEach(x=>x.setAttribute("aria-selected",x==b));$("#pUp").hidden=tab!="up";$("#pUrl").hidden=tab!="url";render()});
+const drop=$("#drop");drop.onclick=()=>$("#file").click();drop.onkeydown=e=>{if(e.key=="Enter"||e.key==" "){e.preventDefault();$("#file").click()}};
+["dragover","dragenter"].forEach(v=>drop.addEventListener(v,e=>{e.preventDefault();drop.classList.add("over")}));
+["dragleave","drop"].forEach(v=>drop.addEventListener(v,e=>{e.preventDefault();drop.classList.remove("over")}));
+drop.ondrop=e=>add(e.dataTransfer.files);$("#file").onchange=e=>{add(e.target.files);e.target.value=""};
+function add(fl){for(const f of fl){const x=f.name.split(".").pop().toLowerCase();
+ if(cfg.in.length&&!cfg.in.includes(x)){toast(`${f.name}: unsupported format`,1);continue}
+ if(f.size>cfg.max_mb*1048576){toast(`${f.name}: larger than ${cfg.max_mb} MB`,1);continue}
+ if(files.length>=cfg.max_files){toast(`Maximum ${cfg.max_files} files per batch`,1);break}files.push(f)}resetJob();render()}
+function resetJob(){job=null;$("#zip").hidden=true}
+function render(st){const L=$("#list");L.innerHTML="";if(tab!="up")return;
+ files.forEach((f,i)=>{const s=st?.[i];const d=document.createElement("div");d.className="item "+(s?.status||"");
+ d.innerHTML=`<div><div class="n"></div><small></small></div><div></div><div class="bar"><i></i></div>`;
+ d.querySelector(".n").textContent=f.name;d.querySelector("small").textContent=s?(s.error||({queued:"Queued",converting:Math.round(s.progress)+"%",done:"Ready"}[s.status]||s.status)):mb(f.size);
+ d.querySelector(".bar i").style.width=(s?.status=="error"?100:s?.progress||0)+"%";const r=d.children[1];
+ if(s?.status=="done"){const a=document.createElement("a");a.className="btn";a.textContent="Download";a.href=`/api/jobs/${job}/files/${s.i}`;r.append(a)}
+ else if(!s&&!busy){const x=document.createElement("button");x.className="x";x.textContent="×";x.setAttribute("aria-label","Remove "+f.name);x.onclick=()=>{files.splice(i,1);render()};r.append(x)}
+ L.append(d)})}
+$("#clear").onclick=()=>{if(busy)return;files=[];$("#urls").value="";resetJob();render();$("#list").innerHTML=""};
+$("#go").onclick=async()=>{if(busy)return;const fmt=document.querySelector("[name=f]:checked").value;let res;busy=true;$("#go").disabled=true;resetJob();
+ try{if(tab=="up"){if(!files.length)throw Error("Add at least one file first.");const fd=new FormData();files.forEach(f=>fd.append("files",f));fd.append("format",fmt);
+  res=await fetch("/api/convert",{method:"POST",body:fd})}
+ else{const urls=$("#urls").value.split("\n").map(s=>s.trim()).filter(Boolean);if(!urls.length)throw Error("Paste at least one URL first.");
+  res=await fetch("/api/convert-url",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({urls,format:fmt})})}
+ const j=await res.json().catch(()=>({}));if(!res.ok)throw Error(j.error||j.detail||"Something went wrong.");job=j.job;await poll()}
+ catch(e){toast(e.message,1)}busy=false;$("#go").disabled=false};
+async function poll(){for(;;){const r=await fetch(`/api/jobs/${job}`);if(!r.ok){toast("This job expired. Please convert again.",1);return}
+ const s=await r.json();if(tab=="url"){files=s.items.map(i=>({name:i.name,size:0}))}render(s.items);
+ if(s.finished){const ok=s.items.filter(i=>i.status=="done").length;$("#zip").hidden=ok<2;
+  ok?toast(`${ok} of ${s.items.length} file(s) converted.`):toast("No files could be converted.",1);if(tab=="url")tab_url_list(s.items);return}
+ await new Promise(r=>setTimeout(r,800))}}
+function tab_url_list(items){const saved=tab;tab="up";render(items);tab=saved}
+$("#zip").onclick=()=>{if(job)location.href=`/api/jobs/${job}/zip`};
+function ytId(u){try{const x=new URL(u),h=x.hostname.replace(/^www\.|^m\./,"");if(h=="youtu.be")return x.pathname.slice(1);if(h=="youtube.com"){if(x.pathname=="/watch")return x.searchParams.get("v");const m=x.pathname.match(/^\/(embed|shorts|live)\/([\w-]{11})/);return m&&m[2]}}catch{}return null}
+$("#ytb").onclick=()=>{const id=ytId($("#ytu").value.trim());const o=$("#ytout");if(!id||!/^[\w-]{11}$/.test(id)){o.innerHTML="";toast("Enter a valid YouTube video link.",1);return}
+ o.innerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/${id}" title="YouTube player" allow="encrypted-media;picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe><p>Plays in YouTube’s official player. <a href="https://www.youtube.com/watch?v=${id}" target="_blank" rel="noopener noreferrer">Open on YouTube</a> to use its offline features.</p>`};
+</script></body></html>
